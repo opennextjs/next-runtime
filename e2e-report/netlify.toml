@@ -2,6 +2,3 @@
 base = "e2e-report/"
 command = "next build"
 publish = ".next"
-
-[[plugins]]
-package = "@netlify/plugin-nextjs"

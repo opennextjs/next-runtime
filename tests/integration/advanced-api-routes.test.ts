@@ -26,7 +26,7 @@ it<FixtureTestContext>('test', async (ctx) => {
   const runPluginPromise = runPlugin(ctx)
 
   await expect(runPluginPromise).rejects.toThrow(
-    '@netlify/plugin-nextjs@5 does not support advanced API routes. The following API routes should be migrated to Netlify background or scheduled functions:',
+    '@opennextjs/netlify@5 does not support advanced API routes. The following API routes should be migrated to Netlify background or scheduled functions:',
   )
 
   // list API routes to migrate

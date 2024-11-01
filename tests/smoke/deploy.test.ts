@@ -66,7 +66,7 @@ describe('version check', () => {
     async () => {
       await expect(selfCleaningFixtureFactories.next12_1_0()).rejects.toThrow(
         new RegExp(
-          `@netlify/plugin-nextjs@5 requires Next.js version >=13.5.0, but found 12.1.0. Please upgrade your project's Next.js version.`,
+          `@opennextjs/netlify@5 requires Next.js version >=13.5.0, but found 12.1.0. Please upgrade your project's Next.js version.`,
         ),
       )
     },
@@ -83,7 +83,7 @@ describe('version check', () => {
         selfCleaningFixtureFactories.yarnMonorepoMultipleNextVersionsSiteIncompatible(),
       ).rejects.toThrow(
         new RegExp(
-          `@netlify/plugin-nextjs@5 requires Next.js version >=13.5.0, but found 13.4.1. Please upgrade your project's Next.js version.`,
+          `@opennextjs/netlify@5 requires Next.js version >=13.5.0, but found 13.4.1. Please upgrade your project's Next.js version.`,
         ),
       )
     },
@@ -101,7 +101,7 @@ describe('version check', () => {
         fixtureFactories.npmNestedSiteMultipleNextVersionsIncompatible(),
       ).rejects.toThrow(
         new RegExp(
-          `@netlify/plugin-nextjs@5 requires Next.js version >=13.5.0, but found 13.4.1. Please upgrade your project's Next.js version.`,
+          `@opennextjs/netlify@5 requires Next.js version >=13.5.0, but found 13.4.1. Please upgrade your project's Next.js version.`,
         ),
       )
     },

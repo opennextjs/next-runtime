@@ -57,7 +57,7 @@ export function verifyPublishDir(ctx: PluginContext) {
       !satisfies(ctx.nextVersion, SUPPORTED_NEXT_VERSIONS, { includePrerelease: true })
     ) {
       ctx.failBuild(
-        `@netlify/plugin-nextjs@5 requires Next.js version ${SUPPORTED_NEXT_VERSIONS}, but found ${ctx.nextVersion}. Please upgrade your project's Next.js version.`,
+        `@opennextjs/netlify@5 requires Next.js version ${SUPPORTED_NEXT_VERSIONS}, but found ${ctx.nextVersion}. Please upgrade your project's Next.js version.`,
       )
     }
   }
@@ -85,7 +85,7 @@ export async function verifyAdvancedAPIRoutes(ctx: PluginContext) {
 
   if (unsupportedAPIRoutes.length !== 0) {
     ctx.failBuild(
-      `@netlify/plugin-nextjs@5 does not support advanced API routes. The following API routes should be migrated to Netlify background or scheduled functions:\n${unsupportedAPIRoutes.map((apiRouteConfig) => ` - ${apiRouteConfig.apiRoute} (type: "${apiRouteConfig.config.type}")`).join('\n')}\n\nRefer to https://ntl.fyi/next-scheduled-bg-function-migration as migration example.`,
+      `@opennextjs/netlify@5 does not support advanced API routes. The following API routes should be migrated to Netlify background or scheduled functions:\n${unsupportedAPIRoutes.map((apiRouteConfig) => ` - ${apiRouteConfig.apiRoute} (type: "${apiRouteConfig.config.type}")`).join('\n')}\n\nRefer to https://ntl.fyi/next-scheduled-bg-function-migration as migration example.`,
     )
   }
 }
@@ -119,7 +119,7 @@ export function verifyNetlifyForms(ctx: PluginContext, html: string) {
     formDetectionRegex.test(html)
   ) {
     ctx.failBuild(
-      '@netlify/plugin-nextjs@5 requires migration steps to support Netlify Forms. Refer to https://ntl.fyi/next-runtime-forms-migration for migration example.',
+      '@opennextjs/netlify@5 requires migration steps to support Netlify Forms. Refer to https://ntl.fyi/next-runtime-forms-migration for migration example.',
     )
   }
 }

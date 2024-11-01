@@ -3,11 +3,11 @@
 # Next.js Runtime
 
 <p align="center">
-  <a aria-label="npm version" href="https://www.npmjs.com/package/@netlify/plugin-nextjs">
-    <img alt="" src="https://img.shields.io/npm/v/@netlify/plugin-nextjs">
+  <a aria-label="npm version" href="https://www.npmjs.com/package/@opennextjs/netlify">
+    <img alt="" src="https://img.shields.io/npm/v/@opennextjs/netlify">
   </a>
-  <a aria-label="MIT License" href="https://img.shields.io/npm/l/@netlify/plugin-nextjs">
-    <img alt="" src="https://img.shields.io/npm/l/@netlify/plugin-nextjs">
+  <a aria-label="MIT License" href="https://img.shields.io/npm/l/@opennextjs/netlify">
+    <img alt="" src="https://img.shields.io/npm/l/@opennextjs/netlify">
   </a>
 </p>
 
@@ -37,21 +37,21 @@ manually in the following ways:
 
 ### From the UI (Recommended)
 
-You can go to the [UI](https://app.netlify.com/plugins/@netlify/plugin-nextjs/install) and choose
-the site to install the Next.js Runtime on. This method is recommended because you will benefit from
+You can go to the [UI](https://app.netlify.com/plugins/@opennextjs/netlify/install) and choose the
+site to install the Next.js Runtime on. This method is recommended because you will benefit from
 auto-upgrades to important fixes and feature updates.
 
 ### From `npm`
 
 ```shell
-npm install -D @netlify/plugin-nextjs
+npm install -D @opennextjs/netlify
 ```
 
 ...then add the following to your `netlify.toml` file:
 
 ```toml
 [[plugins]]
-  package = "@netlify/plugin-nextjs"
+  package = "@opennextjs/netlify"
 ```
 
 This method is recommended if you wish to pin the Next.js Runtime to a specific version.

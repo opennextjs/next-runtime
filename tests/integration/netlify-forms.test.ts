@@ -25,7 +25,7 @@ it<FixtureTestContext>('should fail build when netlify forms are used', async (c
   const runPluginPromise = runPlugin(ctx)
 
   await expect(runPluginPromise).rejects.toThrow(
-    '@netlify/plugin-nextjs@5 requires migration steps to support Netlify Forms. Refer to https://ntl.fyi/next-runtime-forms-migration for migration example.',
+    '@opennextjs/netlify@5 requires migration steps to support Netlify Forms. Refer to https://ntl.fyi/next-runtime-forms-migration for migration example.',
   )
 })
 
