@@ -36,7 +36,10 @@ ResponseCache.prototype.get = function get(...getArgs: unknown[]) {
           const workPromise = fn(...workFnArgs)
           const requestContext = getRequestContext()
           if (requestContext && workPromise instanceof Promise) {
-            requestContext.trackBackgroundWork(workPromise)
+            requestContext.trackBackgroundWork(
+              workPromise,
+              `responseCache batcher ${JSON.stringify(key)}`,
+            )
           }
           return await workPromise
         }
@@ -54,7 +57,10 @@ ResponseCache.prototype.get = function get(...getArgs: unknown[]) {
             backgroundWork.set(key, _resolve)
           })
 
-          requestContext.trackBackgroundWork(workPromise)
+          requestContext.trackBackgroundWork(
+            workPromise,
+            `responseCache pendingResponses ${JSON.stringify(key)}`,
+          )
         }
         return originalPendingResponsesSet.call(this.pendingResponses, key, value)
       }

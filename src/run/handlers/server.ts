@@ -1,6 +1,7 @@
 import type { OutgoingHttpHeaders } from 'http'
 
 import { ComputeJsOutgoingMessage, toComputeResponse, toReqRes } from '@fastly/http-compute-js'
+import type { Context } from '@netlify/functions'
 import type { NextConfigComplete } from 'next/dist/server/config-shared.js'
 import type { WorkerRequestHandler } from 'next/dist/server/lib/types.js'
 
@@ -46,7 +47,11 @@ const disableFaultyTransferEncodingHandling = (res: ComputeJsOutgoingMessage) =>
   }
 }
 
-export default async (request: Request) => {
+export default async (request: Request, context: Context) => {
+  const label = `response - ${request.url} - ${context.requestId}`
+  const start = Date.now()
+  console.log(`Start ${label}`)
+
   const tracer = getTracer()
 
   if (!nextHandler) {
@@ -128,6 +133,7 @@ export default async (request: Request) => {
       async flush() {
         // it's important to keep the stream open until the next handler has finished
         await nextHandlerPromise
+        console.log(`End ${label} - ${(Date.now() - start) / 1000}s`)
 
         // Next.js relies on `close` event emitted by response to trigger running callback variant of `next/after`
         // however @fastly/http-compute-js never actually emits that event - so we have to emit it ourselves,

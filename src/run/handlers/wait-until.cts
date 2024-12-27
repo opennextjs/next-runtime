@@ -20,7 +20,12 @@ export function setupWaitUntil() {
   // eslint-disable-next-line @typescript-eslint/no-extra-semi
   ;(globalThis as GlobalThisWithRequestContext)[NEXT_REQUEST_CONTEXT_SYMBOL] = {
     get() {
-      return { waitUntil: getRequestContext()?.trackBackgroundWork }
+      const trackBackgroundWork = getRequestContext()?.trackBackgroundWork
+      return {
+        waitUntil: trackBackgroundWork
+          ? (promise) => trackBackgroundWork(promise, 'after()')
+          : undefined,
+      }
     },
   }
 }

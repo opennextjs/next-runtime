@@ -25,7 +25,7 @@ export const nextResponseProxy = (res: ServerResponse, requestContext: RequestCo
 
           const result = originalValue.apply(target, args)
           if (result && isPromise(result)) {
-            requestContext.trackBackgroundWork(result)
+            requestContext.trackBackgroundWork(result, 'res.revalidate')
           }
 
           return result

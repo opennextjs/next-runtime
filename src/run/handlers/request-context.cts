@@ -26,7 +26,7 @@ export type RequestContext = {
    * Uses `context.waitUntil` if available, otherwise stores promises to
    * await on.
    */
-  trackBackgroundWork: (promise: Promise<unknown>) => void
+  trackBackgroundWork: (promise: Promise<unknown>, description: string) => void
   /**
    * Promise that need to be executed even if response was already sent.
    * If `context.waitUntil` is available this promise will be always resolved
@@ -41,13 +41,27 @@ type RequestContextAsyncLocalStorage = AsyncLocalStorage<RequestContext>
 export function createRequestContext(request?: Request, context?: FutureContext): RequestContext {
   const backgroundWorkPromises: Promise<unknown>[] = []
 
+  let backgroundWorkCounter = 0
+
   return {
     captureServerTiming: request?.headers.has('x-next-debug-logging') ?? false,
-    trackBackgroundWork: (promise) => {
+    trackBackgroundWork: (promise, description) => {
+      backgroundWorkCounter += 1
+
+      const counter = backgroundWorkCounter
+      const label = `background #${counter} - ${description ?? 'unknown'} - ${context?.requestId}`
+      const start = Date.now()
+
+      console.log(`Start ${label}`)
+
+      const trackedPromise = promise.finally(() => {
+        console.log(`End ${label} - ${(Date.now() - start) / 1000}s`)
+      })
+
       if (context?.waitUntil) {
-        context.waitUntil(promise)
+        context.waitUntil(trackedPromise)
       } else {
-        backgroundWorkPromises.push(promise)
+        backgroundWorkPromises.push(trackedPromise)
       }
     },
     get backgroundWorkPromise() {

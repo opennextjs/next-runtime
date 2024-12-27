@@ -362,6 +362,7 @@ export class NetlifyCacheHandler implements CacheHandlerForMultipleVersions {
                 .withError(error)
                 .error(`[NetlifyCacheHandler]: Purging the cache for tag ${tag} failed`)
             }),
+            `cdn purge after page router .revalidate ${tag}`,
           )
         }
       }
@@ -374,7 +375,10 @@ export class NetlifyCacheHandler implements CacheHandlerForMultipleVersions {
 
     const requestContext = getRequestContext()
     if (requestContext) {
-      requestContext.trackBackgroundWork(revalidateTagPromise)
+      requestContext.trackBackgroundWork(
+        revalidateTagPromise,
+        `revalidateTag ${JSON.stringify(tagOrTags)}`,
+      )
     }
 
     return revalidateTagPromise
