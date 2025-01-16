@@ -1,6 +1,5 @@
 import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
-import { dirname, join, relative, sep } from 'node:path'
-import { sep as posixSep } from 'node:path/posix'
+import { dirname, join } from 'node:path'
 
 import type { Manifest, ManifestFunction } from '@netlify/edge-functions'
 import { glob } from 'fast-glob'
@@ -8,8 +7,6 @@ import type { EdgeFunctionDefinition as NextDefinition } from 'next/dist/build/w
 import { pathToRegexp } from 'path-to-regexp'
 
 import { EDGE_HANDLER_NAME, PluginContext } from '../plugin-context.js'
-
-const toPosixPath = (path: string) => path.split(sep).join(posixSep)
 
 const writeEdgeManifest = async (ctx: PluginContext, manifest: Manifest) => {
   await mkdir(ctx.edgeFunctionsDir, { recursive: true })
@@ -97,14 +94,13 @@ const writeHandlerFile = async (ctx: PluginContext, { matchers, name }: NextDefi
   await writeFile(
     join(handlerDirectory, `${handlerName}.js`),
     `
-    import { decode as _base64Decode } from './edge-runtime/vendor/deno.land/std@0.175.0/encoding/base64.ts';
     import { init as htmlRewriterInit } from './edge-runtime/vendor/deno.land/x/htmlrewriter@v1.0.0/src/index.ts'
-    import {handleMiddleware} from './edge-runtime/middleware.ts';
+    import { handleMiddleware } from './edge-runtime/middleware.ts';
     import handler from './server/${name}.js';
 
-    await htmlRewriterInit({ module_or_path: _base64Decode(${JSON.stringify(
-      htmlRewriterWasm.toString('base64'),
-    )}).buffer });
+    await htmlRewriterInit({ module_or_path: Uint8Array.from(${JSON.stringify([
+      ...htmlRewriterWasm,
+    ])}) });
 
     export default (req, context) => handleMiddleware(req, context, handler);
     `,
@@ -127,23 +123,9 @@ const copyHandlerDependencies = async (
   const outputFile = join(destDir, `server/${name}.js`)
 
   if (wasm?.length) {
-    const base64ModulePath = join(
-      destDir,
-      'edge-runtime/vendor/deno.land/std@0.175.0/encoding/base64.ts',
-    )
-
-    const base64ModulePathRelativeToOutputFile = toPosixPath(
-      relative(dirname(outputFile), base64ModulePath),
-    )
-
-    parts.push(`import { decode as _base64Decode } from "${base64ModulePathRelativeToOutputFile}";`)
     for (const wasmChunk of wasm ?? []) {
       const data = await readFile(join(srcDir, wasmChunk.filePath))
-      parts.push(
-        `const ${wasmChunk.name} = _base64Decode(${JSON.stringify(
-          data.toString('base64'),
-        )}).buffer`,
-      )
+      parts.push(`const ${wasmChunk.name} = Uint8Array.from(${JSON.stringify([...data])})`)
     }
   }
 
